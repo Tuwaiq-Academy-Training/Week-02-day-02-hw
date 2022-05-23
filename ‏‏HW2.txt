@@ -1,0 +1,436 @@
+//Class Customer For JSAN **********************************
+
+package com.example.demo;
+
+
+import com.example.demo.controllers.User;
+
+public class Customer {
+    private int id ;
+    private String username;
+    private double balance;
+
+    public Customer(int id, String username, double balance) {
+        this.id = id;
+        this.username = username;
+        this.balance = balance;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
+}
+
+
+
+
+// سؤال التمرين ********************************************
+
+
+
+
+package com.example.demo;
+
+//import com.example.demo.controllers.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+
+@RestController
+public class Bank {
+    private ArrayList<Customer> ar=new ArrayList<>();
+
+    @GetMapping("customer")
+    public ResponseEntity getCustomer(@RequestBody Customer Customer){
+        return ResponseEntity.status(200).body(ar);
+    }
+    @PostMapping("customer")
+    public ResponseEntity postCustomer(@RequestBody Customer Customer){
+        ar.add(Customer);
+        return ResponseEntity.status(201).body("User add It");
+    }
+
+    @PutMapping("customer/{index}")
+    public ResponseEntity CuputCustomer(@PathVariable Integer index, @RequestBody Customer Customer){
+        ar.set(index,Customer);
+        return  ResponseEntity.status(200).body("User Updated");
+    }
+
+    @DeleteMapping ("customer/{index}")
+    public ResponseEntity deletCustomer(@PathVariable Customer index){
+        ar.remove(index);
+        return ResponseEntity.status(200).body("Deleted");
+    }
+    @PutMapping("customer/{index}")
+    public ResponseEntity putDeposit(@PathVariable Integer index ,@RequestBody Integer a){
+        if (a< 0){
+            return ResponseEntity.status(401).body("The Valie Small Then Zero");
+        }else{
+            ar.get(index).setBalance(ar.get(index).getBalance()+a);
+            return ResponseEntity.status(201).body("Added");
+        }
+    }
+    @PutMapping("customer/with/{index}")
+    public ResponseEntity putWithdraw(@PathVariable Integer index , @RequestBody Integer a) {
+        if (a == 0) {
+            return ResponseEntity.status(401).body("The Valie Small Then Zero");
+        } else {
+            ar.get(index).setBalance(ar.get(index).getBalance() - a);
+            return ResponseEntity.status(201).body("Added");
+        }
+        @PutMapping("customer/with2/{index}")
+        public ResponseEntity putTransfer ( @PathVariable int id, @PathVariable int id1, @RequestBody int amount){
+            if (id > Customerustomers.size() - 1) {
+                return ResponseEntity.status(400).body("customer invalid");
+            } else if (amount < 0) {
+                return ResponseEntity.status(400).body("amount is  invalid");
+            } else if (amount > Customer.get(id).getBalance()) {
+                return ResponseEntity.status(400).body("amount is  greater than balance");
+            } else if (id1 > Customerustomers.size() - 1) {
+                return ResponseEntity.status(400).body("other customer is invalid");
+            }
+            Customerustomers.get(id).setBalance(Customerustomers.get(id).getBalance() - amount);
+            Customerustomers.get(id1).setBalance(Customerustomers.get(id1).getBalance() + amount);
+            return ResponseEntity.status(200).body("Transfer success!");
+        }
+    }
+
+
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.7.0</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	<groupId>com.example</groupId>
+	<artifactId>demo</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>RyaanAwaji</name>
+	<description>Demo project for Spring Boot</description>
+	<properties>
+		<java.version>17</java.version>
+	</properties>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<plugins>
+
+		</plugins>
+	</build>
+
+</project>
+
+
+
+
+HomeWork2-Week2 *************************************************
+
+
+//Class Person For JSAN **********************************
+
+package com.example.demo;
+
+
+import com.example.demo.controllers.User;
+
+public class Person {
+    private String id ;
+    private String name;
+    private int age;
+
+    public Person(String id, String name, int age) {
+        this.id = id;
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+
+
+//  Class person ********************************************
+
+
+
+
+package com.example.demo;
+
+//import com.example.demo.controllers.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+
+@RestController
+public class person {
+    private ArrayList<person> ArrA=new ArrayList<>();
+
+    @GetMapping("person")
+    public ResponseEntity getCustomer(@RequestBody person Customer){
+        return ResponseEntity.status(200).body(ArrA);
+    }
+    @PostMapping("person")
+    public ResponseEntity postCustomer(@RequestBody person Customer){
+        ArrA.add(Customer);
+        return ResponseEntity.status(201).body("User add It");
+    }
+
+    @PutMapping("person/{index}")
+    public ResponseEntity CuputCustomer(@PathVariable Integer index, @RequestBody person person){
+        ArrA.set(index,person);
+        return  ResponseEntity.status(200).body("User Updated");
+    }
+
+    @DeleteMapping ("person/{index}")
+    public ResponseEntity deletCustomer(@PathVariable person index){
+        ArrA.remove(index);
+        return ResponseEntity.status(200).body("Deleted");
+    }
+    @PutMapping("person/{index}")
+    public ResponseEntity putDeposit(@PathVariable Integer index ,@RequestBody Integer a){
+        if (a< 0){
+            return ResponseEntity.status(401).body("The Valie Small Then Zero");
+        }else{
+            ArrA.get(index).setBalance(ArrA.get(index).getBalance()+a);
+            return ResponseEntity.status(201).body("Added");
+        }
+    }
+    @PutMapping("person/query1/{index}")
+    public ResponseEntity putWithdraw(@PathVariable Integer index , @RequestBody Integer a) {
+        if (a == 0) {
+            return ResponseEntity.status(401).body("The Valie Small Then Zero");
+        } else {
+            ArrA.get(index).setBalance(ArrA.get(index).getBalance() - a);
+            return ResponseEntity.status(201).body("Added");
+        }
+        @PutMapping("person/query2/{index}")
+        public ResponseEntity putTransfer ( @PathVariable int id, @PathVariable int id1, @RequestBody int amount){
+            if (id > person.size() - 1) {
+                return ResponseEntity.status(400).body("customer invalid");
+            } else if (amount < 0) {
+                return ResponseEntity.status(400).body("amount is  invalid");
+            } else if (amount > person.get(id).getBalance()) {
+                return ResponseEntity.status(400).body("amount is  greater than balance");
+            } else if (id1 > person.size() - 1) {
+                return ResponseEntity.status(400).body("other customer is invalid");
+            }
+            person.get(id).setBalance(person.get(id).getBalance() - amount);
+            person.get(id1).setBalance(person.get(id1).getBalance() + amount);
+            return ResponseEntity.status(200).body("Transfer success!");
+        }
+    }
+
+
+
+
+HomeWork2-Week2 *************************************************
+
+
+//Class Food For JSAN **********************************
+
+package com.example.demo;
+
+
+import com.example.demo.controllers.User;
+
+public class Food {
+    private int id ;
+    private String name;
+    private int price;
+    private int expire;
+    private String Quantity;
+
+    public Food(int id, String name, int price, int expire, String quantity) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.expire = expire;
+        Quantity = quantity;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public int getExpire() {
+        return expire;
+    }
+
+    public void setExpire(int expire) {
+        this.expire = expire;
+    }
+
+    public String getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(String quantity) {
+        Quantity = quantity;
+    }
+}
+
+    
+//  Class Food ********************************************
+
+
+
+
+package com.example.demo;
+
+//import com.example.demo.controllers.User;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+
+@RestController
+public class Restaurants{
+        private ArrayList<Food> ArrA=new ArrayList<>();
+
+    @GetMapping("Food")
+    public ResponseEntity getCustomer(@RequestBody Food Food){
+        return ResponseEntity.status(200).body(ArrA);
+    }
+    @PostMapping("Food")
+    public ResponseEntity postCustomer(@RequestBody Food Food){
+        ArrA.add(Food);
+        return ResponseEntity.status(201).body("User add It");
+    }
+
+    @PutMapping("Food/{index}")
+    public ResponseEntity CuputCustomer(@PathVariable Integer index, @RequestBody Food Food){
+        ArrA.set(index,Food);
+        return  ResponseEntity.status(200).body("User Updated");
+    }
+
+    @DeleteMapping ("Food/{index}")
+    public ResponseEntity deletCustomer(@PathVariable Food index){
+        ArrA.remove(index);
+        return ResponseEntity.status(200).body("Deleted");
+    }
+    @PutMapping("Food/{index}")
+    public ResponseEntity putDeposit(@PathVariable Integer index ,@RequestBody Integer a){
+        if (a< 0){
+            return ResponseEntity.status(401).body("The Valie Small Then Zero");
+        }else{
+            ArrA.get(index).setBalance(ArrA.get(index).getBalance()+a);
+            return ResponseEntity.status(201).body("Added");
+        }
+    }
+    @PutMapping("person/query1/{index}")
+    public ResponseEntity putWithdraw(@PathVariable Integer index , @RequestBody Integer a) {
+        if (a == 0) {
+            return ResponseEntity.status(401).body("The Valie Small Then Zero");
+        } else {
+            ArrA.get(index).setBalance(ArrA.get(index).getBalance() - a);
+            return ResponseEntity.status(201).body("Added");
+        }
+        @PutMapping("person/query2/{index}")
+        public ResponseEntity putTransfer ( @PathVariable int id, @PathVariable int id1, @RequestBody int amount){
+            if (id > Food.size() - 1) {
+                return ResponseEntity.status(400).body("customer invalid");
+            } else if (amount < 0) {
+                return ResponseEntity.status(400).body("amount is  invalid");
+            } else if (amount > Food.get(id).getBalance()) {
+                return ResponseEntity.status(400).body("amount is  greater than balance");
+            } else if (id1 > Food.size() - 1) {
+                return ResponseEntity.status(400).body("other customer is invalid");
+            }
+            Food.get(id).setBalance(Food.get(id).getBalance() - amount);
+            Food.get(id1).setBalance(Food.get(id1).getBalance() + amount);
+            return ResponseEntity.status(200).body("Transfer success!");
+        }
+    }
+
+
+

@@ -1,0 +1,291 @@
+package com.example.homework7.Taskcntroller;
+import java.time.LocalDate;
+
+
+
+public class Task {
+    private String ID;
+    private String title;
+    private String description;
+    private LocalDate deadline;
+    private Person person;
+    private String status;
+
+    public Task(String ID, String title, String description, LocalDate deadline, Person person, String status) {
+        this.ID = ID;
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+        this.person = person;
+        this.status = status;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+}
+************************************************task controller************************************
+package com.example.homework7.Taskcntroller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+
+@RestController
+public class tasks {
+    ArrayList<Task> tasks = new ArrayList<>();
+
+    @GetMapping("tasks")
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    @PostMapping("tasks")
+    public ResponseEntity addTask(@RequestBody Task task) {
+        tasks.add(task);
+        return ResponseEntity.status(200).body(new ResponseMessage("add is good"));
+    }
+
+
+
+
+    @GetMapping("serchtitle")
+    public Object serchTaskT(@RequestBody String title) {
+
+
+        for (int x = 0; x < tasks.size(); x++) {
+            if (tasks.get(x).getTitle().equals(title)) {
+                return tasks.get(x);
+            }
+        }
+        return new ResponseMessage("title is not found");
+    }
+
+    @GetMapping("serchid")
+    public Object serchTaskid(@RequestBody int id) {
+        for (int x = 0; x < tasks.size(); x++) {
+            if (tasks.get(x).getID().equals(id))
+                return tasks.get(x);}
+        return new ResponseMessage("id is not found");}
+
+    @GetMapping("notDone")
+    public Object notDone() {
+        ArrayList<Task> t = new ArrayList<>();
+        for (int x = 0; x < tasks.size(); x++) {
+            if (tasks.get(x).getStatus().equals("notDone"))
+               t.add(tasks.get(x));}
+        if (t.size()<=0)
+            return new ResponseMessage("all task is done ");
+        else
+                return t;}
+
+}
+*****************************************************food class***********************************************
+package com.example.homework7.Taskcntroller;
+import java.time.LocalDateTime;
+import java.util.Date;
+public class Food {
+    private int ID;
+    private String name;
+    private int price;
+    private Date expiryDate;
+    private int Quantity;
+
+    public Food(int ID, String name, int price, Date expiryDate, int quantity) {
+        this.ID = ID;
+        this.name = name;
+        this.price = price;
+        this.expiryDate = expiryDate;
+        Quantity = quantity;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public void setPrice(int price) {
+        this.price = price;
+    }
+
+    public Date getExpiryDate() {
+        return expiryDate;
+    }
+
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
+    }
+
+    public int getQuantity() {
+        return Quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        Quantity = quantity;
+    }
+}
+********************************************Restaurants class*****************************************
+package com.example.homework7.Taskcntroller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+
+import java.util.ArrayList;
+import java.util.Date;
+
+@RestController
+public class Restaurants {
+
+    ArrayList<Food> foods = new ArrayList<>();
+
+    @GetMapping("foods")
+    public ArrayList<Food> getUser() {
+        return foods;
+    }
+
+    @PostMapping("foods")
+    public ResponseEntity postUser(@RequestBody Food food) {
+        foods.add(food);
+        return ResponseEntity.status(200).body(new ResponseMessage("add is good"));
+    }
+
+    @PutMapping("foods/{index}")
+    public ResponseEntity putfood(@PathVariable int index, @RequestBody Food food) {
+        if (index > foods.size() - 1) {
+            return ResponseEntity.status(400).body(new ResponseMessage("bad request"));
+        }
+        foods.set(index, food);
+        return ResponseEntity.status(200).body(new ResponseMessage("update is good"));
+    }
+
+    @DeleteMapping("foods/{index}")
+    public ResponseEntity deletefood(@PathVariable int index) {
+        if (index > foods.size() - 1) {
+            return ResponseEntity.status(400).body(new ResponseMessage("bad request"));
+        }
+        foods.remove(index);
+        return ResponseEntity.status(200).body(new ResponseMessage("delete is good"));
+    }
+
+    @PutMapping("addQuantity/{index}")
+    public ResponseEntity addQuantity(@PathVariable int index, @RequestBody int q, int id) {
+        if (index > foods.size() - 1) {
+            return ResponseEntity.status(400).body(new ResponseMessage("bad request"));
+        } else if (id == foods.get(index).getID()) {
+            Food u1 = foods.get(index);
+            int i2 = foods.get(index).getQuantity() + q;
+            foods.set(index, u1).setQuantity(i2);
+            return ResponseEntity.status(200).body(new ResponseMessage("good"));
+        } else
+            return ResponseEntity.status(400).body(new ResponseMessage("bad request"));
+    }
+
+    @PutMapping("remove/{index}")
+    public ResponseEntity remove(@PathVariable int index, @RequestBody int q, int id) {
+        if (index > foods.size() - 1) {
+            return ResponseEntity.status(400).body(new ResponseMessage("bad request"));
+        } else if (id == foods.get(index).getID()) {
+            Food u1 = foods.get(index);
+            int i2 = foods.get(index).getQuantity() - q;
+            foods.set(index, u1).setQuantity(i2);
+            return ResponseEntity.status(200).body(new ResponseMessage("good"));
+        } else
+            return ResponseEntity.status(400).body(new ResponseMessage("bad request"));
+    }
+    @PutMapping("check/{index}")
+    public ResponseEntity check(@PathVariable int index, @RequestBody int id) throws ParseException {
+        if (index > foods.size() - 1){
+            return ResponseEntity.status(400).body(new ResponseMessage("bad request"));
+        }
+            Food u1 = foods.get(index);
+            Date i2 = foods.get(index).getExpiryDate();
+            LocalDate localDate = LocalDate.now();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date endDate = sdf.parse("2022-05-25");
+        if(i2.before(endDate)){
+                return ResponseEntity.status(200).body(new ResponseMessage("food is expired"));}
+            else return ResponseEntity.status(200).body(new ResponseMessage("food is good"));
+        }
+}
+********************************************************Response message class*****************************
+package com.example.homework7.Taskcntroller;
+
+public class ResponseMessage {
+    private String message;
+
+    public ResponseMessage(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+}

@@ -1,0 +1,385 @@
+// Q2
+
+package com.example.springday02.model;
+import java.time.LocalDate;
+
+public class Food {
+    private String name, id;
+    private double price;
+    private int qty;
+    private LocalDate date;
+
+
+    public Food(String name, String id, double price, int qty, LocalDate date) {
+        this.name = name;
+        this.id = id;
+        this.price = price;
+        this.qty = qty;
+        this.date = date;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getQty() {
+        return qty;
+    }
+
+    public void setQty(int qty) {
+        this.qty = qty;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+}
+
+/////
+
+package com.example.springday02.controoller;
+
+import com.example.springday02.RequestApi;
+import com.example.springday02.model.Food;
+import com.example.springday02.model.Task;
+import com.example.springday02.model.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.Date;
+import java.util.List;
+import java.util.ArrayList;
+import java.time.LocalDate;
+
+
+@RestController
+public class foodController {
+    private ArrayList<Food> foods=new ArrayList<>();
+
+    @GetMapping("food")
+    public ResponseEntity getFood() {
+
+        return ResponseEntity.status(200).body(foods);
+}
+
+@PostMapping("food")
+public ResponseEntity<RequestApi> add(@RequestBody Food f) {
+    foods.add(f);
+    return ResponseEntity.status(201).body(new RequestApi("add new food"));
+}
+
+    @PutMapping("food/{index}")
+    public ResponseEntity editFood(@PathVariable int index,@RequestBody Food f){
+        if(index > foods.size()||index<0){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid index.");
+        }else
+            foods.set(index,f);
+        return ResponseEntity.status(201).body(f.getName() + " will be updated");
+    }
+
+    @DeleteMapping("food/{index}")
+    public ResponseEntity deleteFood(@PathVariable Integer index) {
+        if (index > foods.size() || index < 0) {
+            return ResponseEntity.status(400).body("Invalid index.");
+        } else {
+            foods.remove((int) index);
+            return ResponseEntity.status(200).body(" will be removed");
+        }
+    }
+    @PutMapping("food/add/{id}")
+        public ResponseEntity addQ(@RequestParam int amount,int id){
+            for(Food food: foods){
+                if(food.getId().equals(id)){
+                    food.setQty(food.getQty() + amount);
+                    return ResponseEntity.status(201).body(" will be added");
+                }
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(" Invalid ID");
+        }
+    @PutMapping("food/remove/{id}")
+    public ResponseEntity removeQ(@RequestParam int amount, int id){
+        for(Food food: foods){
+            if(food.getId().equals(id)){
+                food.setQty(food.getQty()-amount);
+                return ResponseEntity.status(201).body(" will be removed");
+            }
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(" not correct ID");
+    }
+    @GetMapping("food/expiry/{index}")
+    public ResponseEntity check(@PathVariable int index){
+
+        if(index > foods.size() -1 || index < 0) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RequestApi("index is invalid!"));
+        }
+
+        LocalDate localDate = LocalDate.now();
+        int cheek = foods.get(index).getDate().compareTo(localDate);
+        if (cheek == 0||cheek <0) {
+            return ResponseEntity.status(200).body(new RequestApi("yes are expired"));
+        }
+        else
+            if (cheek > 0) {
+            return ResponseEntity.status(200).body(new RequestApi("Food is not expired"));
+        }
+        return ResponseEntity.status(200).body(new RequestApi("wrong"));
+    }
+
+}//end class
+
+
+//////
+
+
+package com.example.springday02;
+
+public class RequestApi {
+    private String massege;
+
+
+    public RequestApi(String massege) {
+        this.massege = massege;
+    }
+
+    public String getMassege() {
+        return massege;
+    }
+
+    public void setMassege(String massege) {
+        this.massege = massege;
+    }
+}
+/////////
+
+
+package com.example.springday02.model;
+import java.time.LocalDate;
+
+public class Task {
+    private String iD;
+    private String title;
+    private String description;
+    private LocalDate deadline;
+    private Person person;
+    public enum statusEnum{
+        done,
+        notDone
+    }
+    private statusEnum status;
+
+    public Task(String iD, String title, String description, LocalDate deadline, Person person, statusEnum status) {
+        this.iD = iD;
+        this.title = title;
+        this.description = description;
+        this.deadline = deadline;
+        this.person = person;
+        this.status = status;
+    }
+
+    public String getiD() {
+        return iD;
+    }
+
+    public void setiD(String iD) {
+        this.iD = iD;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalDate getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(LocalDate deadline) {
+        this.deadline = deadline;
+    }
+
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
+
+    public statusEnum getStatus() {
+        return status;
+    }
+
+    public void setStatus(statusEnum status) {
+        this.status = status;
+    }
+}
+
+package com.example.springday02.model;
+
+public class Person {
+    private String ID;
+    private String name;
+    private int age;
+
+    public Person(String ID, String name, int age) {
+        this.ID = ID;
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+}
+
+package com.example.springday02.controoller;
+
+import com.example.springday02.Customers;
+import com.example.springday02.RequestApi;
+import com.example.springday02.model.Person;
+import com.example.springday02.model.Task;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+@RestController
+public class trakControoller {
+    private ArrayList<Task> Tasks=new ArrayList<>();
+
+    @GetMapping("task")
+    public ResponseEntity getTask() {
+
+        return ResponseEntity.status(200).body(Tasks);
+    }
+
+
+    @PostMapping("task")
+    public ResponseEntity<RequestApi> add(@RequestBody Task t) {
+        Tasks.add(t);
+        return ResponseEntity.status(201).body(new RequestApi("add new Tasks"+t.getiD()));
+    }
+
+
+    @PutMapping("task/status/{index}")
+    public ResponseEntity<RequestApi> editstatus(@PathVariable int index, @RequestParam String status) {
+            if(index >Tasks.size() -1||index <0) {
+                return ResponseEntity.status(400).body(new RequestApi("index is invalid"));
+            }
+            if (status.equals("done") || status.equals("notDone")) {
+                Task t = Tasks.get(index);
+                if (status.equals("done")) {
+                    t.setStatus(Task.statusEnum.done);
+                }else {
+                    t.setStatus(Task.statusEnum.notDone);
+                }
+                return ResponseEntity.status(200).body(new RequestApi("Status will be changes"));
+            }else{
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RequestApi("Bad Request "));
+            }
+        }
+
+
+    @GetMapping("task/{title}")
+    public ResponseEntity<RequestApi> searchtitle(@PathVariable String title) {
+        ArrayList listTitle = new ArrayList<>();
+        for( Task task: Tasks){
+            if(task.getTitle().equals(title) ){
+                listTitle.add(task);
+            }
+        }
+        if(!listTitle.isEmpty()){
+            return ResponseEntity.status(200).body(new RequestApi("add title"));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RequestApi("Bad Request "));
+    }
+    @GetMapping("task/{id}")
+
+    public ResponseEntity<RequestApi> searchperson(@PathVariable String id ) {
+        ArrayList listperson = new ArrayList<>();
+        for(Task t :Tasks){
+            if(t.getPerson().getID().equals(id)){
+                listperson.add(t);
+            }
+        }
+        if(listperson!=null){
+            return ResponseEntity.status(200).body(new RequestApi("add id"));
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new RequestApi("Bad Request "));
+    }
+    @GetMapping("task/{notDone}")
+    public ResponseEntity<RequestApi> getnotDone(@PathVariable String id ) {
+        ArrayList notDone = new ArrayList();
+        for (Task task :Tasks){
+            if(task.getStatus().equals("unDone")){
+                notDone.add(task);
+
+            }
+        }
+        if(notDone!=null){
+            return ResponseEntity.status(200).body(new RequestApi("here return all notDone"));
+        }
+        return ResponseEntity.status(201).body(new RequestApi("all are done"));
+    }
+
+}
+
+
+
+
+

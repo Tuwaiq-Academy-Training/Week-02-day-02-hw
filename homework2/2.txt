@@ -1,0 +1,166 @@
+q1
+import java.util.Scanner;
+public class div {
+    public static void main(String[] args) {
+        Scanner s=new Scanner(System.in);
+        System.out.println("Enter Number 1:");
+        int num1= s.nextInt();
+        System.out.println("Enter Number 2:");
+        int num2 = s.nextInt();
+        try {
+            System.out.println("the result ="+divnum(num1,num2));
+        } catch (ArithmeticException e) {
+            System.out.println(e);
+        }
+    }
+    public static int divnum(int num1,int num2){
+        return num1/num2;
+    }
+}
+
+
+q2
+
+import java.util.Scanner;
+public class CalculateTax {
+    public static void main(String[] args) {
+        Scanner s=new Scanner(System.in);
+        System.out.println("Enter your price:");
+        double price= s.nextInt();
+        try {
+            System.out.println(" the tax of price is:"+calculateTax(price));
+        }catch (ArithmeticException e){
+            System.out.println(e);
+        }
+    }
+
+    public static double calculateTax(double price)throws ArithmeticException{
+        double tax=0;
+          tax=price*15/100;
+          if (price>=100 && price<=500){
+              tax=price*15/100;
+          }else
+              throw new ArithmeticException("The Range is pass");
+        return tax;
+
+    }
+}
+
+q3
+public class Circle {
+
+    private double radius = 1.0;
+
+    public Circle(){
+
+    }
+
+    public  Circle(double radius){
+
+        this.radius =radius;
+    }
+
+    public double getRadius(){
+        return radius;
+    }
+
+    public void setRadius(double newradius){
+
+        this.radius=newradius;
+    }
+
+    public double getArea(){
+        return Math.PI*(radius*radius);
+    }
+    public double getCircumference(){
+        return Math.PI*2*radius;
+    }
+
+    @Override
+    public String toString() {
+        return "Circle{" +
+                "radius=" + radius +
+                '}';
+    }
+}
+
+q4
+public class Customer {
+    private int ID;
+    private String name;
+    private char gender = 'm'|'f';
+
+    public Customer(int ID, String name , int discount) {
+        this.ID = ID;
+        this.name = name;
+        System.out.println(discount);
+
+
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public char getGender() {
+        return gender ;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+}
+
+q5
+public class Point {
+    private int x;
+    private int y;
+
+    public Point(int x, int y) {
+        this.x=x;
+        this.y=y;
+    }
+}
+
+import java.util.List;
+
+public class PolyLine {
+   private List<Point> points;
+
+    public PolyLine() {
+    }
+
+    public PolyLine(List<Point> points) {
+        this.points = points;
+    }
+
+
+    public void appendPoint(int x, int y) {
+        Point n = new Point(x,y);
+        points.add(n);
+    }
+
+        public void appendPoint(Point point) {
+            points.add(point);
+        }
+
+    @Override
+    public String toString() {
+        return "PolyLine{" +
+                "points=" + points +
+                '}';
+    }
+
+    public double getLength(double Length) {
+        return Length;
+    }
+}

@@ -13,6 +13,7 @@ public class TasksController {
 
     @PostMapping("task")
     public ResponseEntity<ResponseAPI> addTasks(@RequestBody Task task) {
+        System.out.println(task);
         this.tasks.add(task);
         return ResponseEntity.status(201).body(new ResponseAPI("Task Added Successfully!"));
     }
@@ -22,13 +23,22 @@ public class TasksController {
         return ResponseEntity.status(201).body(tasks);
     }
 
-    @PutMapping("task/status/{index}")
-    public ResponseEntity<ResponseAPI> changeStatus(@PathVariable Integer index,@RequestBody String status) {
-        if(index <0 || index > this.tasks.size() -1) {
-            return ResponseEntity.status(400).body(new ResponseAPI("index is invalid"));
+    @PutMapping("task/status/{id}")
+    public ResponseEntity<ResponseAPI> changeStatus(@PathVariable Integer id,@RequestBody String status) {
+        Task task = null;
+        int index = 0;
+        for (Task task2 : tasks) {
+            int id2 = Integer.parseInt(task2.getId());
+            if (id2 == id) {
+                task = task2;
+                break;
+            }
+            index++;
+        }
+        if (task == null) {
+            return ResponseEntity.status(400).body(new ResponseAPI("Wrong ID Provided!"));
         }
         if (status.equals("done") || status.equals("notDone")) {
-            Task task = this.tasks.get(index);
             if (status.equals("done")) {
                 task.setStatus(Task.statusEnum.done);
             }else {
@@ -66,7 +76,7 @@ public class TasksController {
         if(returnedTask != null) {
             return ResponseEntity.status(200).body(returnedTask);
         } else {
-            return ResponseEntity.status(400).body(new ResponseAPI("Bad Request - title doesn't exist"));
+            return ResponseEntity.status(400).body(new ResponseAPI("Bad Request - id doesn't exist"));
         }
     }
 

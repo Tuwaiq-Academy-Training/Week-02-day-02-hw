@@ -1,26 +1,26 @@
-package com.example.springrestaurant.model;
-import java.time.LocalDate;
+package com.example.hw2_02_02.model;
 
 public class Food {
-    private int id;
-    private String name;
-    private double price;
-    private LocalDate expirydate;
-    private int quantity;
 
-    public Food(int id, String name, double price, LocalDate expirydate, int quantity) {
+    private String id;
+    private String name;
+    private Integer price;
+    private String expiryDate;
+    private Integer quantity;
+
+    public Food(String id, String name, Integer price, String expiryDate, Integer quantity) {
         this.id = id;
         this.name = name;
         this.price = price;
-        this.expirydate = expirydate;
+        this.expiryDate = expiryDate;
         this.quantity = quantity;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -32,27 +32,27 @@ public class Food {
         this.name = name;
     }
 
-    public double getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Integer price) {
         this.price = price;
     }
 
-    public LocalDate getExpirydate() {
-        return expirydate;
+    public String getExpiryDate() {
+        return expiryDate;
     }
 
-    public void setExpirydate(LocalDate expirydate) {
-        this.expirydate = expirydate;
+    public void setExpiryDate(String expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
-    public int getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 }

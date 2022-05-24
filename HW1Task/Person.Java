@@ -1,4 +1,4 @@
-package com.example.springtask.model;
+package com.example.hw1_02_02.model;
 
 public class Person {
 
@@ -11,7 +11,6 @@ public class Person {
         this.name = name;
         this.age = age;
     }
-
 
     public String getId() {
         return id;

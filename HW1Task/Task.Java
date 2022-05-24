@@ -1,4 +1,4 @@
-package com.example.springtask.model;
+package com.example.hw1_02_02.model;
 
 import java.time.LocalDate;
 
@@ -7,19 +7,19 @@ public class Task {
     private String id;
     private String title;
     private String description;
-    private boolean status;
+    private Boolean Status;
     private LocalDate deadline;
     private Person person;
 
-    public Task(String id, String title, String description, boolean status, LocalDate deadline, Person person) {
+
+    public Task(String id, String title, String description, Boolean status, LocalDate deadline, Person person) {
         this.id = id;
         this.title = title;
         this.description = description;
-        this.status = status;
+        Status = status;
         this.deadline = deadline;
         this.person = person;
     }
-
 
     public String getId() {
         return id;
@@ -45,12 +45,12 @@ public class Task {
         this.description = description;
     }
 
-    public boolean isStatus() {
-        return status;
+    public Boolean getStatus() {
+        return Status;
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public void setStatus(Boolean status) {
+        Status = status;
     }
 
     public LocalDate getDeadline() {

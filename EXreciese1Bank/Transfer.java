@@ -1,9 +1,14 @@
-package com.example.springday2ex1.model;
+package EXreciese1Bank;
 
-public class Withdraw {
+public class Transfer {
 
     private String id;
     private Integer amount;
+
+    public Transfer(String id, Integer amount) {
+        this.id = id;
+        this.amount = amount;
+    }
 
     public String getId() {
         return id;

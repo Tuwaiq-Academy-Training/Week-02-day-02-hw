@@ -1,71 +1,132 @@
-package com.example.firstspringboot;
+package com.example.firstspringboot.comntroller;
 
+import com.example.firstspringboot.Person;
+import com.example.firstspringboot.Task;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
-public class Task {
+@RestController
+@RequestMapping("/task")
+public class TaskController {
+   // LocalDate date1 = LocalDate.of(2022, 03, 28);
+   List<Task> tasks = new ArrayList<>();
 
-    private String id;
-    private String title;
-    private String description;
-    private boolean status;
-    LocalDate deadline;
-    Person person;
+    TaskController() throws ParseException {
 
-    public Task(String id, String title, String description, boolean status, LocalDate deadline, Person person) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
-        this.status = status;
-        this.deadline = deadline;
-        this.person = person;
+
+        LocalDate date1 = LocalDate.of(2022, 03, 28);
+        Integer integer = 1;
+        Person person1 = new Person("0", "Ahmed", integer);
+        Person person2 = new Person("1", "Ahmed", integer);
+        Person person3 = new Person("2", "Ahmed", integer);
+        Person person4 = new Person("4", "Ahmed", integer);
+
+        tasks.addAll(
+                List.of(
+                        new Task("0","Fish", "do the fishes",false, date1, person1),
+                        new Task("1","Egg", "do the fishes",false, date1, person2),
+                        new Task("2","Pulop", "do the fishes",false, date1, person3),
+                        new Task("3","Deer", "do the fishes",false, date1, person4)
+                ));
     }
 
-    public String getId() {
-        return id;
+    @GetMapping()
+    ResponseEntity<Object> getTask(){
+        return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
-    public void setId(String id) {
-        this.id = id;
+
+    @PostMapping()
+    public ResponseEntity<Object> postNewTask(@RequestBody Task t) {
+        tasks.add(t);
+        return new ResponseEntity<>(t, HttpStatus.CREATED);
     }
 
-    public String getTitle() {
-        return title;
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> putChangeStatus(@PathVariable int id){
+        int checkForWork = -1;
+
+        String stringID = String.valueOf(id);
+        Task task = getById(tasks, stringID);
+        if (task != null){
+            checkForWork = Integer.parseInt(task.getId());
+            task.setStatus(!task.isStatus());
+        }
+        return (checkForWork == -1) ? new ResponseEntity<>("Not Found, no task with that id", HttpStatus.BAD_REQUEST)
+                :   new ResponseEntity<>(task, HttpStatus.OK);
+
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    @GetMapping ("/{title}")
+    public ResponseEntity<Object> getTaskByTitle(@PathVariable String title){
+        int checkForWork = -1;
+        Task task = getByTitle(tasks, title);
+        if (task != null) {
+            checkForWork = Integer.parseInt(task.getId());
+        }
+        return (checkForWork == -1) ? new ResponseEntity<>("Not Found, no task with that id", HttpStatus.BAD_REQUEST)
+                :   new ResponseEntity<>(task, HttpStatus.OK);
+
     }
 
-    public String getDescription() {
-        return description;
+    /// needs work
+    @GetMapping ("/person/{id}")
+    public ResponseEntity<Object> getTaskByPersonID(@PathVariable String id){
+        int checkForWork = -1;
+        String stringID = String.valueOf(id);
+        Task task = getByPersonID(tasks, stringID);
+        if (task != null){
+            checkForWork = Integer.parseInt(id);
+        }
+        return (checkForWork == -1) ? new ResponseEntity<>("Not Found, no task with that id", HttpStatus.BAD_REQUEST) :   new ResponseEntity<>(task, HttpStatus.OK);
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+
+    private Task getByPersonID(List<Task> t, String stringID) {
+        for (Task task: tasks){
+            if (task.getPerson().getId().equals(stringID)){
+                return task;
+            }
+        }
+        return null;
     }
 
-    public boolean isStatus() {
-        return status;
+    @GetMapping ("/unfinished")
+    public ResponseEntity<Object> putChangeStatus(){
+        int checkForWork = -1;
+        List<Task> unDoneTasks = new ArrayList<>();
+        for (Task task: tasks){
+            if (!task.isStatus()){
+                unDoneTasks.add(task);
+                checkForWork++;
+            }
+        }
+        return (checkForWork == -1) ? new ResponseEntity<>("No unfinished done task", HttpStatus.BAD_REQUEST)
+                :   new ResponseEntity<>(unDoneTasks, HttpStatus.OK);
     }
 
-    public void setStatus(boolean status) {
-        this.status = status;
+    public static Task getById(List<Task> t, String id){
+        for (Task task: t) {
+            if (task.getId().equals(id)){
+                return task;
+            }
+        }
+        return null;
     }
 
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
+    public static Task getByTitle(List<Task> t, String title){
+        for (Task task: t) {
+            if (task.getTitle().toLowerCase(Locale.ROOT).equals(title.toLowerCase(Locale.ROOT))){
+                return task;
+            }
+        }
+        return null;
     }
 }
-

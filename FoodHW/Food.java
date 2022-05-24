@@ -5,13 +5,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Food {
-    private int ID;
+    private String  ID;
     private String name;
     private double price;
     private String expiryDate;
     private int quantity;
 
-    public Food(int ID, String name, double price, String expiryDate, int quantity) {
+    public Food(String  ID, String name, double price, String expiryDate, int quantity) {
         this.ID = ID;
         this.name = name;
         this.price = price;
@@ -19,11 +19,11 @@ public class Food {
         this.quantity = quantity;
     }
 
-    public int getID() {
+    public String getID() {
         return ID;
     }
 
-    public void setID(int ID) {
+    public void setID(String ID) {
         this.ID = ID;
     }
 

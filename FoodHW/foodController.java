@@ -42,42 +42,53 @@ public class foodController {
     }
     @PutMapping("addquantity")
     public ResponseEntity addQuant(@RequestBody Quantity q1){
-        if(q1.getID() > food.size()-1){
-            return ResponseEntity.status(400).body("Item not found");
+        for( Food f1 : food){
+            if(f1.getID().equals(q1.getID())){
+                f1.setQuantity(f1.getQuantity() + q1.getQuant());
+                return ResponseEntity.status(201).body("Quantity updated");
+            }
         }
-        food.get(q1.getID()).setQuantity(food.get(q1.getID()).getQuantity() + q1.getQuant());
-        return ResponseEntity.status(201).body("Quantity updated");
+        return ResponseEntity.status(400).body("Couldn't find item");
     }
     @PutMapping("removequantity")
     public ResponseEntity removeQuant(@RequestBody Quantity q1){
-        if(q1.getID() > food.size()-1){
-            return ResponseEntity.status(400).body("Item not found");
+
+        for( Food f1 : food){
+            if(f1.getID().equals(q1.getID())){
+
+                f1.setQuantity(f1.getQuantity() - q1.getQuant());
+
+
+                return ResponseEntity.status(201).body("Quantity updated");
+            }
         }
-        food.get(q1.getID()).setQuantity(food.get(q1.getID()).getQuantity() - q1.getQuant());
-        return ResponseEntity.status(201).body("Quantity removed");
+        return ResponseEntity.status(400).body("Couldn't find item");
     }
     @GetMapping("expired/{index}")
-    public ResponseEntity checkDate(@PathVariable Integer index){
-        if(index > food.size()-1){
-            return ResponseEntity.status(401).body("Item not found");
+    public ResponseEntity checkDate(@PathVariable String index) {
+        for (Food f1 : food) {
+            if (f1.getID().equals(index.toString())) {
+                SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                Date expirydate = null;
+                try {
+                    int indx = Integer.parseInt(index);
+                    expirydate = formatter.parse(f1.getExpiryDate());
+                } catch (ParseException e) {
+                    return ResponseEntity.status(400).body("Date format is wrong, try dd/mm/yyyy");
+                }
+                Date currentDate = new Date();
+                if (expirydate.after(currentDate)) {
+                    return ResponseEntity.status(201).body("Not expired");
+                } else {
+                    return ResponseEntity.status(201).body("Item expired");
+                }
+            }
+
+
         }
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-        Date expirydate = null;
-        try{
-            expirydate = formatter.parse(food.get((int)index).getExpiryDate());
-        }catch (ParseException e){
-            return ResponseEntity.status(400).body("Date format is wrong, try dd/mm/yyyy");
-        }
-        Date currentDate = new Date();
-        if(expirydate.after(currentDate)){
-            return ResponseEntity.status(201).body("Not expired");
-        }
-        return ResponseEntity.status(201).body("Item expired");
+
+
+        return ResponseEntity.status(400).body("Item not found");
 
     }
-
-
-
-
-
 }

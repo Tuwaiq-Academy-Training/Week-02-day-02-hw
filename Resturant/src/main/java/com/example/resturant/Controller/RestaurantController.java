@@ -10,10 +10,10 @@ import java.util.ArrayList;
 
 @RestController
 public class RestaurantController {
-    private ArrayList<Food> foods= new ArrayList<>();
+    private ArrayList<Food> foods = new ArrayList<>();
 
     @GetMapping("food")
-    public ResponseEntity<Object> getAllFood(){
+    public ResponseEntity<Object> getAllFood() {
         if (foods.size() > 0) {
             return ResponseEntity.status(200).body(foods);
         } else {
@@ -27,61 +27,115 @@ public class RestaurantController {
         return ResponseEntity.status(200).body(new ResponseAPI("Food Has been Added!"));
     }
 
-    @PutMapping("food/{index}")
-    public ResponseEntity<ResponseAPI> editFood(@PathVariable Integer index,@RequestBody Food food) {
-        if(index > foods.size() -1 || index < 0) {
-            return ResponseEntity.status(400).body(new ResponseAPI("index is invalid!"));
+    @PutMapping("food/{id}")
+    public ResponseEntity<ResponseAPI> editFood(@PathVariable Integer id, @RequestBody Food food) {
+//        if (index > foods.size() - 1 || index < 0) {
+//            return ResponseEntity.status(400).body(new ResponseAPI("index is invalid!"));
+//        }
+        Food food1 = null;
+        int index = 0;
+        for (Food food2 : foods) {
+            int id2 = Integer.parseInt(food2.getId());
+            if (id2 == id) {
+                food1 = food;
+                break;
+            }
+            index++;
         }
-        foods.set(index,food);
+        if (food1 == null) {
+            return ResponseEntity.status(400).body(new ResponseAPI("Wrong ID Provided!"));
+        }
+        foods.set(index, food);
         return ResponseEntity.status(200).body(new ResponseAPI("Food Has been Updated!"));
     }
 
-    @DeleteMapping("food/{index}")
-    public ResponseEntity<ResponseAPI> deleteFood(@PathVariable Integer index) {
-        if(index > foods.size() -1 || index < 0) {
-            return ResponseEntity.status(400).body(new ResponseAPI("index is invalid!"));
+    @DeleteMapping("food/{id}")
+    public ResponseEntity<ResponseAPI> deleteFood(@PathVariable Integer id) {
+        Food food2 = null;
+        int index = 0;
+        for (Food food : foods) {
+            int id2 = Integer.parseInt(food.getId());
+            if (id2 == id) {
+                food2 = food;
+                break;
+            }
+            index++;
+        }
+        if (food2 == null) {
+            return ResponseEntity.status(400).body(new ResponseAPI("Wrong ID Provided!"));
         }
         foods.remove(foods.get(index));
         return ResponseEntity.status(200).body(new ResponseAPI("Food Has been Deleted!"));
     }
 
-    @PutMapping("food/{index}/{qty}")
-    public ResponseEntity<ResponseAPI> addQTY(@PathVariable Integer index, @PathVariable Integer qty) {
-        if(index > foods.size() -1 || index < 0) {
-            return ResponseEntity.status(400).body(new ResponseAPI("index is invalid!"));
+    @PutMapping("food/{id}/{qty}")
+    public ResponseEntity<ResponseAPI> addQTY(@PathVariable Integer id, @PathVariable Integer qty) {
+        Food food2 = null;
+        int index = 0;
+        for (Food food : foods) {
+            int id2 = Integer.parseInt(food.getId());
+            if (id2 == id) {
+                food2 = food;
+                break;
+            }
+            index++;
         }
-        if(qty > 0) {
-            Food newQTY = foods.get(index);
-            newQTY.setQty(newQTY.getQty() + qty);
-            foods.set(index, newQTY);
+        if (food2 == null) {
+            return ResponseEntity.status(400).body(new ResponseAPI("Wrong ID Provided!"));
+        }
+
+        if (qty > 0) {
+            food2.setQty(food2.getQty() + qty);
+            foods.set(index, food2);
             return ResponseEntity.status(200).body(new ResponseAPI("Food Quantity Has been Updated!"));
         } else {
             return ResponseEntity.status(400).body(new ResponseAPI("qty is invalid!"));
         }
     }
 
-    @PutMapping("food/{index}/remove/{qty}")
-    public ResponseEntity<ResponseAPI> removeQTY(@PathVariable Integer index, @PathVariable Integer qty) {
-        if(index > foods.size() -1 || index < 0) {
-            return ResponseEntity.status(400).body(new ResponseAPI("index is invalid!"));
+    @PutMapping("food/{id}/remove/{qty}")
+    public ResponseEntity<ResponseAPI> removeQTY(@PathVariable Integer id, @PathVariable Integer qty) {
+        Food food2 = null;
+        int index = 0;
+        for (Food food : foods) {
+            int id2 = Integer.parseInt(food.getId());
+            if (id2 == id) {
+                food2 = food;
+                break;
+            }
+            index++;
         }
-        Food newQTY = foods.get(index);
-        if(qty > 0) {
-            newQTY.setQty(newQTY.getQty() - qty);
-            foods.set(index,newQTY);
+        if (food2 == null) {
+            return ResponseEntity.status(400).body(new ResponseAPI("Wrong ID Provided!"));
+        }
+
+
+        if (qty > 0) {
+            food2.setQty(food2.getQty() - qty);
+            foods.set(index, food2);
             return ResponseEntity.status(200).body(new ResponseAPI("Food Quantity Has been Updated!"));
-        }else {
+        } else {
             return ResponseEntity.status(400).body(new ResponseAPI("qty is invalid!"));
         }
     }
 
-    @GetMapping("food/{index}/check")
-    public ResponseEntity<ResponseAPI> checkExpiry(@PathVariable Integer index) {
-        if(index > foods.size() -1 || index < 0) {
-            return ResponseEntity.status(400).body(new ResponseAPI("index is invalid!"));
-        }
+    @GetMapping("food/{id}/check")
+    public ResponseEntity<ResponseAPI> checkExpiry(@PathVariable Integer id) {
+
         LocalDate localDate = LocalDate.now();
-        int result = foods.get(index).getExpiryDate().compareTo(localDate);
+        Food food2 = null;
+        for (Food food : foods) {
+            int id2 = Integer.parseInt(food.getId());
+            if (id2 == id) {
+                food2 = food;
+                break;
+            }
+        }
+        if (food2 == null) {
+            return ResponseEntity.status(400).body(new ResponseAPI("Wrong ID Provided!"));
+        }
+
+        int result = food2.getExpiryDate().compareTo(localDate);
         if (result == 0) {
 //            System.out.println("Date1 is equal to Date2");
             return ResponseEntity.status(200).body(new ResponseAPI("Food is expired!"));
@@ -94,4 +148,10 @@ public class RestaurantController {
         }
         return ResponseEntity.status(200).body(new ResponseAPI("something wrong!"));
     }
-    }
+}
+
+
+    //helper function
+//    public Food checkID() {}
+//
+//    }
